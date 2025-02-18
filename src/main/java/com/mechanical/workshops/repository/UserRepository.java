@@ -24,7 +24,13 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     Page<User> findByStatusAndText(@Param("status") Status status,
                                    @Param("text") String text,
                                    Pageable pageable);
-    Page<User> findAllByStatus(Status status, Pageable pageable); //<>
+    Page<User> findAllByStatus(Status status, Pageable pageable);
+
+
+    @Query("SELECT u FROM User u WHERE (u.username = :text OR u.phone = :text OR u.email = :text OR u.identification = :text) AND u.status = :status")
+    Optional<User> findByUsernameOrPhoneOrEmailOrIdentificationAndStatus(@Param("text") String text, @Param("status") Status status);
+
+    //<>
     Optional<User> findByUsername(String username);
     Optional<User> findByEmail(String email);
     Optional<User> findByPhone(String phone);

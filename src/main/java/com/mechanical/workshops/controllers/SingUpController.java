@@ -1,6 +1,5 @@
 package com.mechanical.workshops.controllers;
 
-
 import com.mechanical.workshops.dto.UserSaveRequestDTO;
 import com.mechanical.workshops.service.UserService;
 import jakarta.validation.Valid;

@@ -19,6 +19,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,7 +35,7 @@ public class UserServiceImpl implements UserService{
     private final UserRepository userRepository;
     private final PersonRepository personRepository;
     private final ModelMapper modelMapper;
-
+    private final PasswordEncoder passwordEncoder;
 
 
     @Override
@@ -84,11 +85,13 @@ public class UserServiceImpl implements UserService{
     @Override
     public ResponseEntity<String>  register(UserSaveRequestDTO userSaveRequestDTO) {
         log.info("User {} trying to register", userSaveRequestDTO.getUsername());
+        String encryptedPassword = passwordEncoder.encode(userSaveRequestDTO.getPassword());
         Person person = modelMapper.map(userSaveRequestDTO, Person.class);
         person.setStatus(Status.ACT);
         person = personRepository.save(person);
 
         User user = modelMapper.map(userSaveRequestDTO, User.class);
+        user.setPassword(encryptedPassword);
         user.setStatus(Status.ACT);
         user.setPerson(person);
 

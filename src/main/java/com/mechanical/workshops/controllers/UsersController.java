@@ -3,7 +3,6 @@ package com.mechanical.workshops.controllers;
 import com.mechanical.workshops.dto.PageResponseDto;
 import com.mechanical.workshops.dto.UserSaveRequestDTO;
 import com.mechanical.workshops.service.UserService;
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
