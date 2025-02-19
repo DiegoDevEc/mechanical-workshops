@@ -19,4 +19,6 @@ public class Constants {
     public static final String EMAIL = "Correo electrónico";
     public static final String USERNAME = "Nombre de usuario";
     public static final String IDENTIFICATION = "Identificación";
+
+    public static final String ERROR_TOKEN = "El token no es válido";
 }

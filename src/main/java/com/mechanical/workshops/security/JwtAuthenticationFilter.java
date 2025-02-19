@@ -1,4 +1,6 @@
 package com.mechanical.workshops.security;
+import com.mechanical.workshops.constants.Constants;
+import com.mechanical.workshops.exception.TokenNotValidException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,26 +25,24 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter  {
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
-                                    @NonNull FilterChain filterChain) throws ServletException, IOException {
+                                    @NonNull FilterChain filterChain)  {
         try {
             final String authHeader = request.getHeader("Authorization");
             final String jwt;
             final String userEmail;
 
-            // Verificar que el encabezado Authorization esté presente y empiece con "Bearer"
             if (authHeader == null || !authHeader.startsWith("Bearer ")) {
                 filterChain.doFilter(request, response);
                 return;
             }
 
-            jwt = authHeader.substring(7); // Extraer el JWT del encabezado
-            userEmail = jwtService.extractUsername(jwt); // Extraer el email del JWT
+            jwt = authHeader.substring(7);
+            userEmail = jwtService.extractUsername(jwt);
 
-            // Verificar que el email no sea nulo y que no haya una autenticación activa
             if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
                 if (jwtService.isTokenValid(jwt, userDetails)) {
-                    // Crear el token de autenticación y establecerlo en el contexto de seguridad
+
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                             userDetails, null, userDetails.getAuthorities()
                     );
@@ -51,17 +51,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter  {
                 }
             }
 
-            // Continuar con la cadena de filtros
             filterChain.doFilter(request, response);
 
         } catch (Exception e) {
-            // Loguear el error para obtener más detalles
             logger.error("Error during authentication filter processing", e);
+            throw new TokenNotValidException(Constants.ERROR_TOKEN);
 
-            // Enviar una respuesta de error específica, por ejemplo 400 Bad Request
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST); // o el código de error que consideres apropiado
-            response.getWriter().write("Error processing the authentication request: " + e.getMessage());
-            response.getWriter().flush();
         }
     }
 
