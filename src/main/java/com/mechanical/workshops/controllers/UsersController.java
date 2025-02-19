@@ -1,6 +1,7 @@
 package com.mechanical.workshops.controllers;
 
 import com.mechanical.workshops.dto.PageResponseDto;
+import com.mechanical.workshops.dto.ResponseDto;
 import com.mechanical.workshops.dto.UserSaveRequestDTO;
 import com.mechanical.workshops.service.UserService;
 import lombok.AllArgsConstructor;
@@ -24,12 +25,12 @@ public class UsersController {
     }
 
     @PutMapping("/update/{userId}")
-    public ResponseEntity<String> updateUser(@RequestBody UserSaveRequestDTO userSaveRequestDTO, @PathVariable UUID userId) {
+    public ResponseEntity<ResponseDto> updateUser(@RequestBody UserSaveRequestDTO userSaveRequestDTO, @PathVariable UUID userId) {
         return userService.update(userId, userSaveRequestDTO);
     }
 
     @DeleteMapping("/delete/{userId}")
-    public ResponseEntity<String> deleteUser(@PathVariable UUID userId) {
+    public ResponseEntity<ResponseDto> deleteUser(@PathVariable UUID userId) {
         return userService.delete(userId);
     }
 

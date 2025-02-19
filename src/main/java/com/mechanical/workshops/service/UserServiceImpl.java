@@ -2,6 +2,7 @@ package com.mechanical.workshops.service;
 
 import com.mechanical.workshops.constants.Constants;
 import com.mechanical.workshops.dto.PageResponseDto;
+import com.mechanical.workshops.dto.ResponseDto;
 import com.mechanical.workshops.dto.UserResponseDto;
 import com.mechanical.workshops.dto.UserSaveRequestDTO;
 import com.mechanical.workshops.enums.Status;
@@ -39,11 +40,6 @@ public class UserServiceImpl implements UserService{
 
 
     @Override
-    public String login(String username, String password) {
-        return "";
-    }
-
-    @Override
     public ResponseEntity<PageResponseDto> getAllUserActive(String text, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<User> usersActives = userRepository.findByStatusAndText(Status.ACT, text, pageable);
@@ -71,7 +67,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public ResponseEntity<String> delete(UUID userId) {
+    public ResponseEntity<ResponseDto> delete(UUID userId) {
         User userData = userRepository.findById(userId).orElseThrow(
                 () -> new NotFoundException(String.format(Constants.USER_NOT_FOUND, userId))
         );
@@ -79,11 +75,15 @@ public class UserServiceImpl implements UserService{
 
         userRepository.save(userData);
 
-        return new ResponseEntity<>(String.format(Constants.USER_DELETED, userData.getUsername()), HttpStatus.OK);
+        return new ResponseEntity<>(
+                ResponseDto.builder()
+                        .status(HttpStatus.OK)
+                        .message(String.format(Constants.USER_DELETED, userData.getUsername()))
+                        .build(), HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<String>  register(UserSaveRequestDTO userSaveRequestDTO) {
+    public ResponseEntity<ResponseDto>  register(UserSaveRequestDTO userSaveRequestDTO) {
         log.info("User {} trying to register", userSaveRequestDTO.getUsername());
         String encryptedPassword = passwordEncoder.encode(userSaveRequestDTO.getPassword());
         Person person = modelMapper.map(userSaveRequestDTO, Person.class);
@@ -97,11 +97,15 @@ public class UserServiceImpl implements UserService{
 
         userRepository.save(user);
 
-        return ResponseEntity.ok(String.format(Constants.USER_CREATED, user.getUsername()));
+        return ResponseEntity.ok(
+                ResponseDto.builder()
+                        .status(HttpStatus.OK)
+                        .message(String.format(Constants.USER_CREATED, user.getUsername()))
+                        .build());
     }
 
     @Override
-    public ResponseEntity<String>  update(UUID userId, UserSaveRequestDTO userSaveRequestDTO) {
+    public ResponseEntity<ResponseDto>  update(UUID userId, UserSaveRequestDTO userSaveRequestDTO) {
 
         User userData = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User with ID " + userId + " not found"));
@@ -115,43 +119,53 @@ public class UserServiceImpl implements UserService{
 
         userRepository.save(userData);
 
-        return ResponseEntity.ok(String.format(Constants.USER_UPDATED, userData.getUsername()));
+        return ResponseEntity.ok(ResponseDto.builder()
+                .status(HttpStatus.OK)
+                .message(String.format(Constants.USER_UPDATED, userData.getUsername()))
+                .build());
     }
 
     @Override
-    public ResponseEntity<String> validateEmail(UUID userId, String email) {
+    public ResponseEntity<ResponseDto> validateEmail(UUID userId, String email) {
         return validateField(userId, email, "email");
     }
 
     @Override
-    public ResponseEntity<String> validatePhone(UUID userId, String phone) {
+    public ResponseEntity<ResponseDto> validatePhone(UUID userId, String phone) {
         return validateField(userId, phone, "phone");
     }
 
     @Override
-    public ResponseEntity<String> validateUsername(UUID userId, String username) {
+    public ResponseEntity<ResponseDto> validateUsername(UUID userId, String username) {
         return validateField(userId, username, "username");
     }
 
     @Override
-    public ResponseEntity<String> validateIdentification(UUID userId, String identification) {
+    public ResponseEntity<ResponseDto> validateIdentification(UUID userId, String identification) {
         return validateField(userId, identification, "identification");
     }
 
     @Override
-    public ResponseEntity<String> validateValueIdentification(String value) {
+    public ResponseEntity<ResponseDto> validateValueIdentification(String value) {
 
         boolean isValid = IndentificationUtil.isValidCedula(value);
 
         if (!isValid) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(String.format(Constants.IDENTIFICATION_FORMAT_INVALID, value));
+                    .body(ResponseDto.builder()
+                            .status(HttpStatus.BAD_REQUEST)
+                            .message(String.format(Constants.IDENTIFICATION_FORMAT_INVALID, value))
+                                    .build());
         }
 
-        return ResponseEntity.ok(String.format(Constants.IDENTIFICATION_FORMAT_VALID, value));
+        return ResponseEntity.ok(
+                ResponseDto.builder()
+                        .status(HttpStatus.OK)
+                        .message(String.format(Constants.IDENTIFICATION_FORMAT_VALID, value))
+                        .build());
     }
 
-    private ResponseEntity<String> validateField(UUID userId, String value, String fieldName) {
+    private ResponseEntity<ResponseDto> validateField(UUID userId, String value, String fieldName) {
         Optional<User> user = Optional.empty();
         String fieldMessage = "";
 
@@ -174,16 +188,25 @@ public class UserServiceImpl implements UserService{
                 break;
             default:
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body("Campo no válido para la validación");
+                        .body(ResponseDto.builder()
+                                .status(HttpStatus.BAD_REQUEST)
+                                .message("Campo no válido para la validación").build());
         }
 
         if (user.isPresent()) {
             if (userId == null || !user.get().getId().equals(userId)) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body(String.format(Constants.USER_ALREADY_EXISTS, fieldMessage));
+                        .body(ResponseDto.builder()
+                                .status(HttpStatus.BAD_REQUEST)
+                                .message(String.format(Constants.USER_ALREADY_EXISTS, fieldMessage))
+                                        .build());
             }
         }
-        return ResponseEntity.ok(String.format(Constants.USER_VALID, fieldMessage));
+        return ResponseEntity.ok(
+                ResponseDto.builder()
+                        .status(HttpStatus.OK)
+                        .message(String.format(Constants.USER_VALID, fieldMessage))
+                        .build());
     }
 
 }
