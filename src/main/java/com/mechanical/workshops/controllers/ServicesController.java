@@ -5,6 +5,7 @@ import com.mechanical.workshops.dto.ResponseDto;
 import com.mechanical.workshops.dto.ServiceSaveRequestDto;
 import com.mechanical.workshops.dto.ServiceUpdateRequestDto;
 import com.mechanical.workshops.service.ServicesService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/services")
 @AllArgsConstructor
+@Tag(name = "Services Controller", description = "Services Controller")
 public class ServicesController {
 
     private final ServicesService servicesService;
