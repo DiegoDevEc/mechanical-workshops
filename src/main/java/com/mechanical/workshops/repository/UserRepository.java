@@ -18,7 +18,7 @@ import java.util.UUID;
 public interface UserRepository extends JpaRepository<User, UUID> {
 
     @Query("SELECT u FROM User u WHERE u.status = :status " +
-            "ANN u.role = :role " +
+            "AND u.role = :role " +
             "AND (LOWER(u.username) LIKE LOWER(CONCAT('%', :text, '%')) " +
             "OR LOWER(u.phone) LIKE LOWER(CONCAT('%', :text, '%')) " +
             "OR LOWER(u.identification) LIKE LOWER(CONCAT('%', :text, '%')) " +
