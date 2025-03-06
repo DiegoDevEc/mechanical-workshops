@@ -26,3 +26,8 @@ server:
   servlet:
     context-path: /api
 
+cron:
+  job:
+    generar-turnos: "0 0 6 * * ?"
+
+

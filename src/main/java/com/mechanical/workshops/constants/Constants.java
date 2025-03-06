@@ -9,6 +9,14 @@ public class Constants {
     public static final String USER_UPDATED = "El usuario: %s se actualizo correctamente";
     public static final String USER_CREATED = "El usuario: %s se creo correctamente";
     public static final String USER_DELETED = "El usuario: %s se elimino correctamente";
+
+    public static final String ENTITY_NOT_FOUND = "El %s: %s no existe";
+    public static final String ENTITY_UPDATED = "El %s: %s se actualizo correctamente";
+    public static final String ENTITY_CREATED = "El %s: %s se creo correctamente";
+    public static final String ENTITY_DELETED = "El %s: %s se elimino correctamente";
+
+    public static final String SERVICE = "Servicio";
+
     public static final String IDENTIFICATION_FORMAT_VALID = "La cédula: %s es correcta";
     public static final String IDENTIFICATION_FORMAT_INVALID = "La cédula: %s es incorrecta";
 
