@@ -1,6 +1,5 @@
 package com.mechanical.workshops.repository;
 
-import com.mechanical.workshops.dto.UserResponseDto;
 import com.mechanical.workshops.enums.Role;
 import com.mechanical.workshops.enums.Status;
 import com.mechanical.workshops.models.User;

@@ -32,10 +32,7 @@ public class ServicesServiceImpl implements ServicesService {
                 serviceRepository.findByStatusAndText(Status.ACT, text, pageable);
 
         List<ServiceResponseDto> servicesDtoList = servicesActives.getContent().stream()
-                .map(service -> {
-                    ServiceResponseDto dto = modelMapper.map(service, ServiceResponseDto.class);
-                    return dto;
-                })
+                .map(this::apply)
                 .toList();
 
         return ResponseEntity.ok(PageResponseDto.builder()
@@ -96,5 +93,9 @@ public class ServicesServiceImpl implements ServicesService {
                         .status(HttpStatus.OK)
                         .message(String.format(Constants.ENTITY_DELETED, Constants.SERVICE , serviceData.getName()))
                 .build());
+    }
+
+    private ServiceResponseDto apply(com.mechanical.workshops.models.Service service) {
+        return modelMapper.map(service, ServiceResponseDto.class);
     }
 }

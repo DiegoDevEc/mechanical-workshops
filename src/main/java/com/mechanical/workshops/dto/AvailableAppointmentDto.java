@@ -1,7 +1,6 @@
 package com.mechanical.workshops.dto;
 
 import com.mechanical.workshops.enums.DayOfWeek;
-import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;

@@ -1,6 +1,11 @@
 package com.mechanical.workshops.utils;
 
 public class IndentificationUtil {
+
+
+    private IndentificationUtil() {
+    }
+
     public static boolean isValidCedula(String cedula) {
         // Verificar que tenga 10 dígitos
         if (cedula == null || !cedula.matches("\\d{10}")) {

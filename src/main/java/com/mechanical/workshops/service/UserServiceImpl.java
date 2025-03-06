@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService{
 
                     return dto;
                 })
-                .collect(Collectors.toList());
+                .toList();
 
         return ResponseEntity.ok(PageResponseDto.builder()
                         .content(userDtoList)
@@ -167,7 +167,7 @@ public class UserServiceImpl implements UserService{
     }
 
     private ResponseEntity<ResponseDto> validateField(UUID userId, String value, String fieldName) {
-        Optional<User> user = Optional.empty();
+        Optional<User> user;
         String fieldMessage = "";
 
         switch (fieldName) {
@@ -194,15 +194,15 @@ public class UserServiceImpl implements UserService{
                                 .message("Campo no válido para la validación").build());
         }
 
-        if (user.isPresent()) {
-            if (userId == null || !user.get().getId().equals(userId)) {
+
+            if (user.isPresent() &&  (userId == null || !user.get().getId().equals(userId))) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .body(ResponseDto.builder()
                                 .status(HttpStatus.BAD_REQUEST)
                                 .message(String.format(Constants.USER_ALREADY_EXISTS, fieldMessage))
                                         .build());
             }
-        }
+
         return ResponseEntity.ok(
                 ResponseDto.builder()
                         .status(HttpStatus.OK)

@@ -3,7 +3,6 @@ package com.mechanical.workshops.service;
 import com.mechanical.workshops.dto.AvailableAppointmentDto;
 import com.mechanical.workshops.dto.PageResponseDto;
 import com.mechanical.workshops.enums.Status;
-import com.mechanical.workshops.models.AvailableAppointment;
 import com.mechanical.workshops.repository.AvailableAppointmentRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;

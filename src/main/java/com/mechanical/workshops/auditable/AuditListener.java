@@ -11,7 +11,7 @@ import java.util.UUID;
 @Component
 public class AuditListener {
 
-    private static AuditLogRepository auditLogRepository;
+    private AuditLogRepository auditLogRepository;
     private static final ObjectMapper objectMapper = new ObjectMapper(); // Para convertir objetos a JSON
 
     @Autowired

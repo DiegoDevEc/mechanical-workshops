@@ -6,6 +6,7 @@ import com.mechanical.workshops.models.AvailableAppointment;
 import com.mechanical.workshops.repository.AvailableAppointmentRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class AppointmentAvailableCronService {
@@ -68,7 +70,7 @@ public class AppointmentAvailableCronService {
         }
 
         saveAppointments(availableAppointments);
-        System.out.println("Appointments generated for the week from " + startDate + " to " + endDate);
+        log.info("Appointments generated for the week from {} to {}", startDate, endDate);
     }
 
     // Method to check if it's the first time the app is run

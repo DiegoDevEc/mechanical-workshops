@@ -42,7 +42,7 @@ public class SecurityConfig {
 
         http.cors(cors-> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests((authorize) -> {
+                .authorizeHttpRequests(authorize -> {
                     authorize.requestMatchers("/api/public/**").permitAll();
                     authorize.requestMatchers( "/swagger-ui/**", "/v3/api-docs/**").permitAll();
                     authorize.requestMatchers(HttpMethod.POST, "/**").permitAll();

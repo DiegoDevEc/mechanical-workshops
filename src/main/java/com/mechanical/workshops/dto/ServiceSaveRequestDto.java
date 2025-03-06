@@ -1,6 +1,5 @@
 package com.mechanical.workshops.dto;
 
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
