@@ -1,6 +1,7 @@
 package com.mechanical.workshops.repository;
 
 import com.mechanical.workshops.dto.UserResponseDto;
+import com.mechanical.workshops.enums.Role;
 import com.mechanical.workshops.enums.Status;
 import com.mechanical.workshops.models.User;
 import org.springframework.data.domain.Page;
@@ -17,12 +18,14 @@ import java.util.UUID;
 public interface UserRepository extends JpaRepository<User, UUID> {
 
     @Query("SELECT u FROM User u WHERE u.status = :status " +
+            "ANN u.role = :role " +
             "AND (LOWER(u.username) LIKE LOWER(CONCAT('%', :text, '%')) " +
             "OR LOWER(u.phone) LIKE LOWER(CONCAT('%', :text, '%')) " +
             "OR LOWER(u.identification) LIKE LOWER(CONCAT('%', :text, '%')) " +
             "OR LOWER(u.email) LIKE LOWER(CONCAT('%', :text, '%')))")
-    Page<User> findByStatusAndText(@Param("status") Status status,
+    Page<User> findByStatusAndTextAndRole(@Param("status") Status status,
                                    @Param("text") String text,
+                                   @Param("role") Role role,
                                    Pageable pageable);
     Page<User> findAllByStatus(Status status, Pageable pageable);
 

@@ -3,13 +3,14 @@ package com.mechanical.workshops.service;
 import com.mechanical.workshops.dto.PageResponseDto;
 import com.mechanical.workshops.dto.ResponseDto;
 import com.mechanical.workshops.dto.UserSaveRequestDTO;
+import com.mechanical.workshops.enums.Role;
 import org.springframework.http.ResponseEntity;
 
 import java.util.UUID;
 
 
 public interface UserService {
-    ResponseEntity<PageResponseDto> getAllUserActive(String text, int page, int size);
+    ResponseEntity<PageResponseDto> getAllUserActive(Role role, String text, int page, int size);
     ResponseEntity<ResponseDto> delete(UUID userId);
 
     ResponseEntity<ResponseDto> register(UserSaveRequestDTO userSaveRequestDTO);

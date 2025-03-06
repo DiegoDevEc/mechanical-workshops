@@ -5,6 +5,7 @@ import com.mechanical.workshops.dto.PageResponseDto;
 import com.mechanical.workshops.dto.ResponseDto;
 import com.mechanical.workshops.dto.UserResponseDto;
 import com.mechanical.workshops.dto.UserSaveRequestDTO;
+import com.mechanical.workshops.enums.Role;
 import com.mechanical.workshops.enums.Status;
 import com.mechanical.workshops.exception.NotFoundException;
 import com.mechanical.workshops.models.Person;
@@ -40,9 +41,9 @@ public class UserServiceImpl implements UserService{
 
 
     @Override
-    public ResponseEntity<PageResponseDto> getAllUserActive(String text, int page, int size) {
+    public ResponseEntity<PageResponseDto> getAllUserActive(Role role, String text, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<User> usersActives = userRepository.findByStatusAndText(Status.ACT, text, pageable);
+        Page<User> usersActives = userRepository.findByStatusAndTextAndRole(Status.ACT, text, role, pageable);
 
         List<UserResponseDto> userDtoList = usersActives.getContent().stream()
                 .map(user -> {
