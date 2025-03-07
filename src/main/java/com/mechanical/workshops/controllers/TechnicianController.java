@@ -16,7 +16,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/technician")
 @AllArgsConstructor
-@Tag(name = "Technician", description = "Technician services")
+@Tag(name = "Técnicos", description = "Controller para gestionar el técnicos de la empresa (Operaciones CRUD)")
 public class TechnicianController {
 
     private final UserService userService;

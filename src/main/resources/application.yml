@@ -30,4 +30,10 @@ cron:
   job:
     generar-turnos: "0 0 6 * * ?"
 
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
+
 

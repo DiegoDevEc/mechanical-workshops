@@ -6,9 +6,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @OpenAPIDefinition(
     info = @io.swagger.v3.oas.annotations.info.Info(
-        title = "Mechanical Workshops API",
+        title = "Talleres Mecánicos API",
         version = "1.0",
-        description = "API for Mechanical Workshops"
+        description = "API para Talleres Mecánicos"
     )
 )
 public class OpenApiConfig {

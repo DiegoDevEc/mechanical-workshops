@@ -5,6 +5,7 @@ import com.mechanical.workshops.dto.ResponseDto;
 import com.mechanical.workshops.dto.UserSaveRequestDTO;
 import com.mechanical.workshops.enums.Role;
 import com.mechanical.workshops.service.UserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/users")
 @AllArgsConstructor
+@Tag(name = "Usuarios del sistema", description = "Controller para gestionar el usuarios del sistema (Operaciones CRUD)")
 public class UsersController {
 
     private final UserService userService;

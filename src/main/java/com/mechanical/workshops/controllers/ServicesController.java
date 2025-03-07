@@ -16,7 +16,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/services")
 @AllArgsConstructor
-@Tag(name = "Services Controller", description = "Services Controller")
+@Tag(name = "Servicios ofrecidos Controller", description = "Controller para gestionar los servicios ofrecidos (Operaciones CRUD)")
 public class ServicesController {
 
     private final ServicesService servicesService;

@@ -3,6 +3,7 @@ package com.mechanical.workshops.controllers;
 import com.mechanical.workshops.dto.ResponseDto;
 import com.mechanical.workshops.dto.UserSaveRequestDTO;
 import com.mechanical.workshops.service.UserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/public/users")
 @AllArgsConstructor
+@Tag(name = "Registrarse y Validar usuarios", description = "Controller para gestionar el registro de usuarios (Operaciones CRUD)")
 public class SingUpController {
 
     private final UserService userService;

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/appointment-available")
 @AllArgsConstructor
-@Tag(name = "Appointment Available", description = "Appointment Available")
+@Tag(name = "Citas Disponibles", description = "Controller gestiona las citas disponibles (Citas Disponibles CRUD)")
 public class AppointmentAvailableController {
 
     private final AppointmentAvailableService appointmentAvailableService;

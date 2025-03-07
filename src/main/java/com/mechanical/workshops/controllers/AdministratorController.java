@@ -15,7 +15,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/administrator")
 @AllArgsConstructor
-@Tag(name = "Administrator", description = "Administrator services")
+@Tag(name = "Administradores", description = "Controller para administradores (Operaciones CRUD)")
 public class AdministratorController {
 
     private final UserService userService;
