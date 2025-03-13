@@ -23,7 +23,7 @@ public class UsersController {
     @GetMapping("/all")
     public ResponseEntity<PageResponseDto> getAllUsersActives(@RequestParam(defaultValue = "") String text,
                                                                                @RequestParam(defaultValue = "0") int page,
-                                                                               @RequestParam(defaultValue = "5") int size) {
+                                                                               @RequestParam(defaultValue = "10") int size) {
         return userService.getAllUserActive(Role.CLIENT, text, page, size);
     }
 

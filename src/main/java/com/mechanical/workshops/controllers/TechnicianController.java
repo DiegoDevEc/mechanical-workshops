@@ -27,7 +27,9 @@ public class TechnicianController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<PageResponseDto> getAllUserActive(@RequestParam(required = false) String text, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+    public ResponseEntity<PageResponseDto> getAllUserActive(@RequestParam(defaultValue = "") String text,
+                                                            @RequestParam(defaultValue = "0") int page,
+                                                            @RequestParam(defaultValue = "5") int size) {
         return userService.getAllUserActive(Role.TECHNICIAN ,text, page, size);
     }
 

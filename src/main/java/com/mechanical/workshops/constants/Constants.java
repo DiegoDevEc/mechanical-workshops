@@ -15,7 +15,15 @@ public class Constants {
     public static final String ENTITY_CREATED = "El %s: %s se creo correctamente";
     public static final String ENTITY_DELETED = "El %s: %s se elimino correctamente";
 
+    public static final String ENTITY_ALREADY_EXISTS = "La %s: con el nombre: %s ya existe";
+    public static final String ENTITY_ALREADY_EXISTS_BY_SKU = "El %s: con el SKU: %s ya existe";
+
     public static final String SERVICE = "Servicio";
+    public static final String CATEGORY = "Categoría";
+    public static final String PRODUCT = "Producto";
+    public static final String APPOINTMENT = "Cita";
+    public static final String AVAILABLE_APPOINTMENT = "Cita disponible";
+    public static final String USER = "Usuario";
 
     public static final String IDENTIFICATION_FORMAT_VALID = "La cédula: %s es correcta";
     public static final String IDENTIFICATION_FORMAT_INVALID = "La cédula: %s es incorrecta";

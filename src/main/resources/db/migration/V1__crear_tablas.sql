@@ -64,14 +64,26 @@ CREATE TABLE attendances (
   status TEXT NOT NULL CHECK (status IN ('ACT', 'INA', 'BLO'))
 );
 
--- Crear tabla productos
+-- Crear tabla de categorías
+CREATE TABLE categories (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name TEXT NOT NULL UNIQUE,
+    description TEXT,
+    status TEXT NOT NULL CHECK (status IN ('ACT', 'INA', 'BLO'))
+);
+
+-- Crear tabla de productos con relación a categorías y campo de versión
 CREATE TABLE products (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  name TEXT NOT NULL,
-  description TEXT,
-  price NUMERIC(10, 2) NOT NULL,
-  stock INT NOT NULL,
-  status TEXT NOT NULL CHECK (status IN ('ACT', 'INA', 'BLO'))
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    sku TEXT,
+    name TEXT NOT NULL,
+    description TEXT,
+    price NUMERIC(10, 2) NOT NULL,
+    stock INT NOT NULL,
+    status TEXT NOT NULL CHECK (status IN ('ACT', 'INA', 'BLO')),
+    category_id UUID NOT NULL,
+    version BIGINT DEFAULT 0, -- Campo de control de versiones para manejo de bloqueo optimista
+    FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE
 );
 
 -- Crear tabla ventas
@@ -140,4 +152,20 @@ INSERT INTO users (id, username, identification, phone, email, password, role, s
 ('fbbed76f-1e1d-4a1f-a75f-54316b4e5637', 'prueba2', '1717744312', '0998348309', 'muestra@email.com', '$2a$10$hcbr9P.HJEjRYOT2msO7IuPuK0dJl.5VHJq92/pNGFfwqYXf8tIYW', 'TECHNICIAN', 'ACT', '90792107-6a12-4412-be79-edc8a15179f3'),
 ('5e5a32c9-d9f0-41eb-82b3-4b5ae192dc6f', 'prueba12', '1717744310', '0988888888', 'email@email.com', '$2a$10$sis9cg4WsgyIE4NwCNVYd.o7jjOKvWvOMq3jsRLA9wFjaUfiLA5LS', 'TECHNICIAN', 'ACT', '560311c8-bb91-4771-90c4-f33c5c5b09f9');
 
+
+-- Insertar categorías
+INSERT INTO categories (name, description, status) VALUES
+('Motor', 'Piezas y repuestos del motor', 'ACT'),
+('Frenos', 'Sistemas de frenos para vehículos', 'ACT');
+
+-- Insertar productos con referencia a categorías
+INSERT INTO products (sku, name, description, price, stock, status, category_id)
+VALUES
+('MOT-202503-001', 'Filtro de aceite', 'Filtro para motor', 15.99, 25, 'ACT',
+ (SELECT id FROM categories WHERE name = 'Motor')),
+
+('FRE-202503-002', 'Pastillas de freno', 'Juego de pastillas de freno', 30.00, 10, 'ACT',
+ (SELECT id FROM categories WHERE name = 'Frenos'));
+
+ UPDATE products SET version = 0 WHERE version IS NULL;
 
