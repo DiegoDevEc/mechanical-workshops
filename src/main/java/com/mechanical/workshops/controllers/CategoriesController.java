@@ -31,6 +31,11 @@ public class CategoriesController {
         return categoryService.getAllCategories(text, page, size);
     }
 
+    @GetMapping("/all-active")
+    public ResponseEntity<ResponseDto> getAllCategoriesActive() {
+        return categoryService.getAllCategoriesActive();
+    }
+
     @PutMapping("/update/{categoryId}")
     public ResponseEntity<ResponseDto> updateUser(@RequestBody CategorySaveRequestDto categorySaveRequestDto, @PathVariable UUID categoryId) {
         return categoryService.update(categoryId, categorySaveRequestDto);

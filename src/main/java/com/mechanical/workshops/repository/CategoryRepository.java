@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -22,5 +23,7 @@ public interface CategoryRepository extends JpaRepository<Category, UUID> {
                                       @Param("text") String text,
                                       Pageable pageable);
     Optional<Category> findByName(String name);
+
+    List<Category> findByStatus(Status status);
 
 }

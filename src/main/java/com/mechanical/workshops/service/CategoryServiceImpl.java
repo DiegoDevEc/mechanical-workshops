@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -42,6 +43,19 @@ public class CategoryServiceImpl implements CategoryService {
                 .totalPages(categoriesActives.getTotalPages())
                 .build());
     }
+
+    @Override
+    public ResponseEntity<ResponseDto> getAllCategoriesActive() {
+        List<CategoryResponseDto> categoryDtoList = categoryRepository.findByStatus(Status.ACT).stream()
+                .map(category -> modelMapper.map(category, CategoryResponseDto.class))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(ResponseDto.builder()
+                .status(HttpStatus.OK)
+                .data(categoryDtoList)
+                .build());
+    }
+
 
     @Override
     public ResponseEntity<ResponseDto> register(CategorySaveRequestDto categorySaveRequestDto) {
