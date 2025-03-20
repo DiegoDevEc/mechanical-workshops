@@ -2,6 +2,7 @@ package com.mechanical.workshops.repository;
 
 import com.mechanical.workshops.enums.Role;
 import com.mechanical.workshops.enums.Status;
+import com.mechanical.workshops.models.Person;
 import com.mechanical.workshops.models.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,4 +38,5 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     Optional<User> findByEmail(String email);
     Optional<User> findByPhone(String phone);
     Optional<User> findByIdentification(String identification);
+    Optional<User> findByPerson(Person person);
 }

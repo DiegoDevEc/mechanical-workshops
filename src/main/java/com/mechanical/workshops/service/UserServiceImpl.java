@@ -52,6 +52,7 @@ public class UserServiceImpl implements UserService{
                         dto.setFirstname(user.getPerson().getFirstname());
                         dto.setLastname(user.getPerson().getLastname());
                         dto.setAddress(user.getPerson().getAddress());
+                        dto.setPersonId(user.getPerson().getId());
                     }
 
                     return dto;

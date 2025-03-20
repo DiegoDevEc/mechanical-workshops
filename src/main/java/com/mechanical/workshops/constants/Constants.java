@@ -22,6 +22,7 @@ public class Constants {
     public static final String CATEGORY = "Categoría";
     public static final String PRODUCT = "Producto";
     public static final String APPOINTMENT = "Cita";
+    public static final String ATTENDANCE = "Cita - Atención";
     public static final String AVAILABLE_APPOINTMENT = "Cita disponible";
     public static final String USER = "Usuario";
 

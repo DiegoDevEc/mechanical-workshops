@@ -4,5 +4,5 @@ import com.mechanical.workshops.dto.PageResponseDto;
 import org.springframework.http.ResponseEntity;
 
 public interface AppointmentAvailableService {
-    ResponseEntity<PageResponseDto> getAllAppointmentAvailable();
+    ResponseEntity<PageResponseDto> getAllAppointmentAvailable(String text, Integer page, Integer size);
 }

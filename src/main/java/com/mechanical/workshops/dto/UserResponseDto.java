@@ -18,4 +18,5 @@ public class UserResponseDto {
     private String identification;
     private String phone;
     private String email;
+    private UUID personId;
 }
