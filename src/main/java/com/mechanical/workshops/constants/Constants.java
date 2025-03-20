@@ -14,6 +14,7 @@ public class Constants {
     public static final String ENTITY_UPDATED = "El %s: %s se actualizo correctamente";
     public static final String ENTITY_CREATED = "El %s: %s se creo correctamente";
     public static final String ENTITY_DELETED = "El %s: %s se elimino correctamente";
+    public static final String ENTITY_CANCELED = "El %s: %s se cancelo correctamente";
 
     public static final String ENTITY_ALREADY_EXISTS = "La %s: con el nombre: %s ya existe";
     public static final String ENTITY_ALREADY_EXISTS_BY_SKU = "El %s: con el SKU: %s ya existe";

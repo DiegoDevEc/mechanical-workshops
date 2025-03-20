@@ -119,6 +119,21 @@ public class AppointmentServiceImpl implements AppointmentService{
 
     @Override
     public ResponseEntity<ResponseDto> delete(UUID appointmentId) {
-        return null;
+
+        appointmentRepository.findById(appointmentId).ifPresent(appointment -> {
+            appointment.setStatus(StatusAppointment.CANCELED);
+            appointmentRepository.save(appointment);
+
+            attendanceRepository.findByAppointment(appointment).ifPresent(attendance -> {
+                attendance.setStatus(StatusAttendance.CANCELED);
+                attendanceRepository.save(attendance);
+            });
+
+        });
+
+        return ResponseEntity.ok(ResponseDto.builder()
+                .status(HttpStatus.OK)
+                .message(String.format(Constants.ENTITY_CANCELED, Constants.APPOINTMENT, appointmentId))
+                .build());
     }
 }

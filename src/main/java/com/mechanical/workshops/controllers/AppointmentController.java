@@ -35,4 +35,9 @@ public class AppointmentController {
         return appointmentService.updateAssigned(appointmentId, appointmentRequestDto);
     }
 
+    @DeleteMapping("/delete/{appointmentId}")
+    public ResponseEntity<ResponseDto> delete(@PathVariable UUID appointmentId) {
+        return appointmentService.delete(appointmentId);
+    }
+
 }

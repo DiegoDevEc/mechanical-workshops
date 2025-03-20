@@ -1,5 +1,5 @@
 package com.mechanical.workshops.enums;
 
 public enum StatusAttendance {
-   ASSIGN, PROGRESS, NOTIFIED, FINISH, CANCEL
+   ASSIGN, PROGRESS, NOTIFIED, FINISH, CANCELED
 }
