@@ -38,8 +38,11 @@ public class UserSaveRequestDTO {
     @Email(message = "Debe ser un correo válido")
     private String email;
 
-    @NotBlank(message = "La contraseña es obligatoria")
+   // @NotBlank(message = "La contraseña es obligatoria")
     private String password;
+
+    @NotNull(message = "El cambio de contraseña es obligatorio")
+    private Boolean mustChangePassword;
 
     @NotNull(message = "El rol es obligatorio")
     private Role role;

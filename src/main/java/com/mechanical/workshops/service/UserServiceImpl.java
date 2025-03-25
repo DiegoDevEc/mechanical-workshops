@@ -12,7 +12,9 @@ import com.mechanical.workshops.models.Person;
 import com.mechanical.workshops.models.User;
 import com.mechanical.workshops.repository.PersonRepository;
 import com.mechanical.workshops.repository.UserRepository;
+import com.mechanical.workshops.utils.EmailUtil;
 import com.mechanical.workshops.utils.IndentificationUtil;
+import com.mechanical.workshops.utils.PasswordUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -24,10 +26,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Collectors;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -87,6 +86,13 @@ public class UserServiceImpl implements UserService{
     @Override
     public ResponseEntity<ResponseDto>  register(UserSaveRequestDTO userSaveRequestDTO) {
         log.info("User {} trying to register", userSaveRequestDTO.getUsername());
+
+        if(userSaveRequestDTO.getMustChangePassword()){
+            String password = PasswordUtil.generateRandomPassword();
+            userSaveRequestDTO.setPassword(password);
+            sendEmail(userSaveRequestDTO);
+        }
+
         String encryptedPassword = passwordEncoder.encode(userSaveRequestDTO.getPassword());
         Person person = modelMapper.map(userSaveRequestDTO, Person.class);
         person.setStatus(Status.ACT);
@@ -210,5 +216,19 @@ public class UserServiceImpl implements UserService{
                         .message(String.format(Constants.USER_VALID, fieldMessage))
                         .build());
     }
+
+    private void sendEmail(UserSaveRequestDTO userSaveRequestDTO) {
+
+        String toEmail = userSaveRequestDTO.getEmail();
+        String subject = "Bienvenido";
+        Map<String, String> parameters = new HashMap<>();
+
+        parameters.put("password", userSaveRequestDTO.getPassword());
+        parameters.put("name", userSaveRequestDTO.getFirstname() + " " + userSaveRequestDTO.getLastname());
+
+        EmailUtil.sendEmail(toEmail, subject, "welcome_user_email_template", parameters);
+
+    }
+
 
 }

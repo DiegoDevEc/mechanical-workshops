@@ -44,6 +44,9 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Status status;
 
+    @Column(nullable = false)
+    private Boolean mustChangePassword;
+
     @ManyToOne
     @JoinColumn(name = "person_id")
     private Person person;

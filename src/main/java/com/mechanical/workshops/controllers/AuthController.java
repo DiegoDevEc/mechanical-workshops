@@ -2,6 +2,8 @@ package com.mechanical.workshops.controllers;
 
 import com.mechanical.workshops.dto.AuthRequestDto;
 import com.mechanical.workshops.dto.AuthResponseDto;
+import com.mechanical.workshops.dto.ChangePasswordDto;
+import com.mechanical.workshops.dto.ResponseDto;
 import com.mechanical.workshops.security.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,5 +28,11 @@ public class AuthController {
             @RequestBody AuthRequestDto request
     ){
         return ResponseEntity.ok(service.authenticate(request));
+    }
+
+    @PostMapping("/change-password")
+    public ResponseEntity<ResponseDto> changePassword(
+            @RequestBody ChangePasswordDto changePasswordDto) {
+        return service.changePassword(changePasswordDto);
     }
 }

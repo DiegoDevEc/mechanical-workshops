@@ -27,6 +27,8 @@ public class Constants {
     public static final String AVAILABLE_APPOINTMENT = "Cita disponible";
     public static final String USER = "Usuario";
 
+    public static final String USER_PASSWORD_CHANGED = "La contraseña del usuario: %s se actualizo correctamente";
+
     public static final String IDENTIFICATION_FORMAT_VALID = "La cédula: %s es correcta";
     public static final String IDENTIFICATION_FORMAT_INVALID = "La cédula: %s es incorrecta";
 
