@@ -1,5 +1,6 @@
 package com.mechanical.workshops.models;
 
+import com.mechanical.workshops.auditable.AuditListener;
 import com.mechanical.workshops.enums.StatusAppointment;
 import jakarta.persistence.*;
 import lombok.*;
@@ -13,6 +14,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EntityListeners(AuditListener.class)
 public class Appointment {
 
     @Id

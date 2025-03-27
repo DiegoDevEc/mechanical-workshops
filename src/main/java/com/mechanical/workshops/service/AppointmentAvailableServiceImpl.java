@@ -35,6 +35,9 @@ public class AppointmentAvailableServiceImpl implements AppointmentAvailableServ
                 .map(availableAppointment -> modelMapper.map(availableAppointment, AvailableAppointmentDto.class)).toList();
         return ResponseEntity.ok(PageResponseDto.builder()
                 .content(availableAppointments)
+                        .pageNumber(pageable.getPageNumber())
+                        .pageSize(pageable.getPageSize())
+                        .totalPages(availableAppointments.size() / pageable.getPageSize())
                         .totalElements(Long.valueOf(availableAppointments.size()))
                 .build());
     }

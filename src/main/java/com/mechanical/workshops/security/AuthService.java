@@ -57,6 +57,7 @@ public class AuthService {
         extraClaims.put("lastname", user.getPerson().getLastname());
         extraClaims.put("address", user.getPerson().getAddress());
         extraClaims.put("changePassword", user.getMustChangePassword());
+        extraClaims.put("key-master", user.getPerson().getId());
 
         // Generar el token con el UserDetails correcto
         var jwtToken = jwtService.generateToken(extraClaims, userDetails);

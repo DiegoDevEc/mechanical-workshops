@@ -13,7 +13,7 @@ WHERE status NOT IN ('INGRESS', 'PROGRESS', 'FINISH');
 
 -- 3. Agregar la nueva restricción CHECK con los valores permitidos
 ALTER TABLE attendances ADD CONSTRAINT attendances_status_check
-CHECK (status IN ('ASSIGN', 'PROGRESS', 'NOTIFIED', 'FINISH', 'CANCELED'));
+CHECK (status IN ('INGRESS','ASSIGN', 'PROGRESS', 'NOTIFIED', 'FINISH', 'CANCELED'));
 
 ALTER TABLE appointments ADD CONSTRAINT appointments_status_check
 CHECK (status IN ('INGRESS', 'PROGRESS', 'FINISH', 'CANCELED'));

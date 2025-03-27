@@ -1,5 +1,6 @@
 package com.mechanical.workshops.models;
 
+import com.mechanical.workshops.auditable.AuditListener;
 import com.mechanical.workshops.enums.DayOfWeek;
 import com.mechanical.workshops.enums.Status;
 import jakarta.persistence.*;
@@ -18,6 +19,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Entity
 @Table(name = "available_appointments")
+@EntityListeners(AuditListener.class)
 public class AvailableAppointment {
 
     @Id

@@ -1,6 +1,7 @@
 package com.mechanical.workshops.models;
 
 
+import com.mechanical.workshops.auditable.AuditListener;
 import com.mechanical.workshops.enums.Status;
 import jakarta.persistence.*;
 import lombok.*;
@@ -15,6 +16,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EntityListeners(AuditListener.class)
 public class SalesDetail {
 
     @Id

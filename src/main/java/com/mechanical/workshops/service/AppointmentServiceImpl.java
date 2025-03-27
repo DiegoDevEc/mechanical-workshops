@@ -2,16 +2,12 @@ package com.mechanical.workshops.service;
 
 import com.mechanical.workshops.constants.Constants;
 import com.mechanical.workshops.dto.*;
+import com.mechanical.workshops.enums.Status;
 import com.mechanical.workshops.enums.StatusAppointment;
 import com.mechanical.workshops.enums.StatusAttendance;
 import com.mechanical.workshops.exception.NotFoundException;
-import com.mechanical.workshops.models.Appointment;
-import com.mechanical.workshops.models.Attendance;
-import com.mechanical.workshops.models.Person;
-import com.mechanical.workshops.repository.AppointmentRepository;
-import com.mechanical.workshops.repository.AttendanceRepository;
-import com.mechanical.workshops.repository.ServiceRepository;
-import com.mechanical.workshops.repository.UserRepository;
+import com.mechanical.workshops.models.*;
+import com.mechanical.workshops.repository.*;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -33,6 +29,53 @@ public class AppointmentServiceImpl implements AppointmentService{
     private final ModelMapper modelMapper;
     private final UserRepository userRepository;
     private final AttendanceRepository attendanceRepository;
+    private final AvailableAppointmentRepository availableAppointmentRepository;
+    private final PersonRepository personRepository;
+    private final VehicleRepository vehicleRepository;
+    private final ServiceRepository serviceRepository;
+
+    @Override
+    public ResponseEntity<ResponseDto> register(AppointmentRequestDto appointmentRequestDto) {
+
+        AvailableAppointment availableAppointment = availableAppointmentRepository
+               .findById(appointmentRequestDto.getAvailableAppointmentId()).orElseThrow(() -> new NotFoundException("Availability Appointment not found"));
+
+       Person client = personRepository.findById(appointmentRequestDto.getClientId())
+               .orElseThrow(() -> new NotFoundException("Client not found"));
+
+       Vehicle vehicle = vehicleRepository.findById(appointmentRequestDto.getVehicleId())
+               .orElseThrow(() -> new NotFoundException("Vehicle not found"));
+
+       com.mechanical.workshops.models.Service service = serviceRepository.findById(appointmentRequestDto.getServiceId())
+               .orElseThrow(() -> new NotFoundException("Service not found"));
+
+       Appointment appointment = Appointment.builder()
+               .client(client)
+               .availableAppointment(availableAppointment)
+               .vehicle(vehicle)
+               .status(StatusAppointment.INGRESS)
+               .dateAppointment(availableAppointment.getDateAvailable())
+               .build();
+
+       appointmentRepository.save(appointment);
+
+        Attendance attendance = Attendance.builder()
+               .appointment(appointment)
+               .service(service)
+               .status(StatusAttendance.INGRESS)
+               .build();
+
+       attendanceRepository.save(attendance);
+
+        availableAppointment.setStatus(Status.INA);
+
+        availableAppointmentRepository.save(availableAppointment);
+
+       return ResponseEntity.ok(ResponseDto.builder()
+               .status(HttpStatus.OK)
+               .message(String.format(Constants.ENTITY_CREATED, Constants.ATTENDANCE, availableAppointment.getId()))
+               .build());
+    }
 
     @Override
     public ResponseEntity<PageResponseDto> getAllAppointments(LocalDate startDate, LocalDate endDate, StatusAppointment status, int page, int size) {
@@ -54,7 +97,9 @@ public class AppointmentServiceImpl implements AppointmentService{
 
                     attendanceRepository.findByAppointment(appointment).ifPresent(attendance -> {
                         appointmentResponseDto.setStatusAttendance(attendance.getStatus().name());
-                        appointmentResponseDto.setTechnician(modelMapper.map(attendance.getTechnician(), UserResponseDto.class));
+                        if(attendance.getTechnician() != null){
+                            appointmentResponseDto.setTechnician(modelMapper.map(attendance.getTechnician(), UserResponseDto.class));
+                        }
                         appointmentResponseDto.setService(modelMapper.map(attendance.getService(), ServiceResponseDto.class));
                     });
 

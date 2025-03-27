@@ -1,0 +1,1 @@
+ALTER TABLE public.attendances ALTER COLUMN technician_id DROP NOT NULL;

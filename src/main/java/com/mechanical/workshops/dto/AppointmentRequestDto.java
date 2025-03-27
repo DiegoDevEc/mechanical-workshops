@@ -1,5 +1,6 @@
 package com.mechanical.workshops.dto;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -13,14 +14,16 @@ import java.util.UUID;
 @Builder
 public class AppointmentRequestDto {
 
+    @NotNull(message = "El cliente es obligatorio")
     private UUID clientId;
 
+    @NotNull(message = "El vehículo es obligatorio")
     private UUID vehicleId;
 
-    private LocalDate dateAppointment;
-
-    private String status;
-
+    @NotNull(message = "La cita disponible es obligatoria")
     private UUID availableAppointmentId;
+
+    @NotNull(message = "El servicio es obligatorio")
+    private UUID serviceId;
 }
 

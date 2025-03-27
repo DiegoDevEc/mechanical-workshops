@@ -1,7 +1,6 @@
 package com.mechanical.workshops.controllers;
 
 import com.mechanical.workshops.dto.PageResponseDto;
-import com.mechanical.workshops.enums.Role;
 import com.mechanical.workshops.service.AppointmentAvailableService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;

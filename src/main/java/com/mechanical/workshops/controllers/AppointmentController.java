@@ -1,11 +1,13 @@
 package com.mechanical.workshops.controllers;
 
 import com.mechanical.workshops.dto.AppointmentAssignedRequestDto;
+import com.mechanical.workshops.dto.AppointmentRequestDto;
 import com.mechanical.workshops.dto.PageResponseDto;
 import com.mechanical.workshops.dto.ResponseDto;
 import com.mechanical.workshops.enums.StatusAppointment;
 import com.mechanical.workshops.service.AppointmentService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,13 +33,18 @@ public class AppointmentController {
     }
 
     @PutMapping("/update-assigned/{appointmentId}")
-    public ResponseEntity<ResponseDto> updateAssigned(@RequestBody AppointmentAssignedRequestDto appointmentRequestDto, @PathVariable UUID appointmentId) {
-        return appointmentService.updateAssigned(appointmentId, appointmentRequestDto);
+    public ResponseEntity<ResponseDto> updateAssigned(@RequestBody AppointmentAssignedRequestDto appointmentAssignedRequestDto, @PathVariable UUID appointmentId) {
+        return appointmentService.updateAssigned(appointmentId, appointmentAssignedRequestDto);
     }
 
     @DeleteMapping("/delete/{appointmentId}")
     public ResponseEntity<ResponseDto> delete(@PathVariable UUID appointmentId) {
         return appointmentService.delete(appointmentId);
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<ResponseDto> register(@Valid @RequestBody AppointmentRequestDto appointmentRequestDto) {
+        return appointmentService.register(appointmentRequestDto);
     }
 
 }

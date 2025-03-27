@@ -20,6 +20,7 @@ public class Constants {
     public static final String ENTITY_ALREADY_EXISTS_BY_SKU = "El %s: con el SKU: %s ya existe";
 
     public static final String SERVICE = "Servicio";
+    public static final String VEHICLE = "Vehículo";
     public static final String CATEGORY = "Categoría";
     public static final String PRODUCT = "Producto";
     public static final String APPOINTMENT = "Cita";

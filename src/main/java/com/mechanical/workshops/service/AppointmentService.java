@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 public interface AppointmentService {
+    ResponseEntity<ResponseDto> register(AppointmentRequestDto appointmentRequestDto);
     ResponseEntity<PageResponseDto> getAllAppointments(LocalDate startDate, LocalDate endDate, StatusAppointment status, int page, int size);
     ResponseEntity<ResponseDto> update(UUID appointmentId, AppointmentRequestDto appointmentRequestDto);
     ResponseEntity<ResponseDto> updateAssigned(UUID appointmentId, AppointmentAssignedRequestDto appointmentAssignedRequestDto);
