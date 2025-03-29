@@ -1,6 +1,5 @@
 package com.mechanical.workshops.dto;
 
-import com.mechanical.workshops.enums.DayOfWeek;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -17,5 +16,6 @@ public class AvailableAppointmentDto {
     private UUID id;
     private LocalDate dateAvailable;
     private LocalTime timeAvailable;
-    private DayOfWeek dayOfWeek;
+    private String dayOfWeek;
+    private String code;
 }

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.UUID;
 
 @Repository
@@ -24,4 +25,10 @@ public interface AvailableAppointmentRepository extends JpaRepository<AvailableA
             @Param("date") LocalDate date,
             @Param("time") LocalTime time,
             Pageable pageable);
+
+    int deleteByDateAvailableBeforeAndStatus(LocalDate date, Status status);
+
+    boolean existsByDateAvailable(LocalDate date);
+    List<AvailableAppointment> findByDateAvailableAfterAndStatus(LocalDate date, Status status);
+    List<AvailableAppointment> findByDateAvailableAndStatus(LocalDate date, Status status);
 }

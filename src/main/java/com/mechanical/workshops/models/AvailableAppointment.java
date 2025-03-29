@@ -1,7 +1,6 @@
 package com.mechanical.workshops.models;
 
 import com.mechanical.workshops.auditable.AuditListener;
-import com.mechanical.workshops.enums.DayOfWeek;
 import com.mechanical.workshops.enums.Status;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -39,8 +38,10 @@ public class AvailableAppointment {
     @Column(name = "status", nullable = false)
     private Status status;  // Estado de la disponibilidad
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "day_of_week", nullable = false)
-    private DayOfWeek dayOfWeek;  // Día de la semana
+    private String dayOfWeek;  // Día de la semana
+
+    @Column(name = "code", nullable = false)
+    private String code;  // Día de la semana
 }
 

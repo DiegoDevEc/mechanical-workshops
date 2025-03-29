@@ -45,6 +45,8 @@ public class Attendance {
 
     private String comments;
 
+    private String code;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private StatusAttendance status;

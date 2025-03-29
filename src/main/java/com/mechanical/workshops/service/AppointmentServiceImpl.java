@@ -62,6 +62,7 @@ public class AppointmentServiceImpl implements AppointmentService{
         Attendance attendance = Attendance.builder()
                .appointment(appointment)
                .service(service)
+                .code(availableAppointment.getCode())
                .status(StatusAttendance.INGRESS)
                .build();
 
@@ -102,6 +103,7 @@ public class AppointmentServiceImpl implements AppointmentService{
                         }
                         appointmentResponseDto.setService(modelMapper.map(attendance.getService(), ServiceResponseDto.class));
                     });
+                    appointmentResponseDto.setCode(appointment.getAvailableAppointment().getCode());
 
                     return appointmentResponseDto;
 

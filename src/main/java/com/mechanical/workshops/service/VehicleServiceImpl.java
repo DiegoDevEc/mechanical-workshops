@@ -3,12 +3,14 @@ package com.mechanical.workshops.service;
 import com.mechanical.workshops.constants.Constants;
 import com.mechanical.workshops.dto.PageResponseDto;
 import com.mechanical.workshops.dto.ResponseDto;
+import com.mechanical.workshops.dto.VehicleResponseDto;
 import com.mechanical.workshops.dto.VehicleSaveRequestDto;
 import com.mechanical.workshops.enums.Status;
 import com.mechanical.workshops.exception.NotFoundException;
 import com.mechanical.workshops.models.Person;
 import com.mechanical.workshops.models.Vehicle;
 import com.mechanical.workshops.repository.PersonRepository;
+import com.mechanical.workshops.repository.UserRepository;
 import com.mechanical.workshops.repository.VehicleRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -29,22 +31,23 @@ public class VehicleServiceImpl implements VehicleService{
     private final VehicleRepository vehicleRepository;
     private final PersonRepository personRepository;
     private final ModelMapper modelMapper;
+    private final UserRepository userRepository;
 
     @Override
     public ResponseEntity<PageResponseDto> getAllVehiclesByClient(UUID clientId, int page, int size) {
 
-        Person client = personRepository.findById(clientId)
-                .orElseThrow(() -> new NotFoundException("Client not found"));
+        Person client = userRepository.findByPerson(Person.builder().id(clientId).build())
+                .orElseThrow(() -> new NotFoundException("Client not found")).getPerson();
 
         Pageable pageable = PageRequest.of(page, size);
 
       Page<Vehicle> vehicles = vehicleRepository.findByClientAndStatus(client,Status.ACT ,pageable);
 
-        List<VehicleSaveRequestDto> servicesDtoList = vehicles.getContent()
-                .stream().map(vehicle -> modelMapper.map(vehicle, VehicleSaveRequestDto.class)).toList();
+        List<VehicleResponseDto> vehiculesDtoList = vehicles.getContent()
+                .stream().map(vehicle -> modelMapper.map(vehicle, VehicleResponseDto.class)).toList();
 
         return ResponseEntity.ok(PageResponseDto.builder()
-                .content(servicesDtoList)
+                .content(vehiculesDtoList)
                 .pageNumber(vehicles.getNumber())
                 .pageSize(vehicles.getSize())
                 .totalElements(vehicles.getTotalElements())

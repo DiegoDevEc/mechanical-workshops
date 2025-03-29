@@ -15,6 +15,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Slf4j
 @Service
@@ -26,15 +27,19 @@ public class AppointmentAvailableCronService {
     private static final LocalTime SATURDAY_START = LocalTime.of(8, 0);
     private static final LocalTime SATURDAY_END = LocalTime.of(12, 0);
     private static final int MAX_PARALLEL = 3;
-    private static final int APPOINTMENT_DURATION_MINUTES = 60;
+    private static final int APPOINTMENT_DURATION_MINUTES = 20;
 
-    private AvailableAppointmentRepository availableAppointmentRepository; // Repository to save appointments
+    private final AvailableAppointmentRepository availableAppointmentRepository;
+    private final Random random = new Random();
 
-
-    @Scheduled(cron = "0 0 6 ? * MON")
+    @Scheduled(cron = "0 0 22 * * ?")
     public void generateAppointmentsFor7Days() {
-        LocalDate startDate = LocalDate.now().plusDays(1);
+        LocalDate today = LocalDate.now();
+        LocalDate startDate = today.plusDays(1);
         LocalDate endDate = startDate.plusDays(6);
+
+        // Eliminar turnos antiguos
+        cleanOldAppointments(today);
 
         List<AvailableAppointment> availableAppointments = new ArrayList<>();
 
@@ -42,33 +47,34 @@ public class AppointmentAvailableCronService {
             boolean isSaturday = date.getDayOfWeek() == DayOfWeek.SATURDAY;
             boolean isSunday = date.getDayOfWeek() == DayOfWeek.SUNDAY;
 
-            if (!isSunday) { // No appointments on Sundays
+            if (!isSunday) { // No hay turnos los domingos
+
+                if (availableAppointmentRepository.existsByDateAvailable(date)) {
+                    log.info("Appointments already exist for date {}", date);
+                    continue; // Omitir la generación de turnos para esta fecha
+                }
+
                 LocalTime start = isSaturday ? SATURDAY_START : MONDAY_FRIDAY_START;
                 LocalTime end = isSaturday ? SATURDAY_END : MONDAY_FRIDAY_END;
 
                 LocalTime appointmentStart = start;
-
-                while (start.isBefore(end)) {
-
+                while (appointmentStart.isBefore(end)) {
                     for (int i = 0; i < MAX_PARALLEL; i++) {
-
                         availableAppointments.add(AvailableAppointment.builder()
                                 .dateAvailable(date)
                                 .timeAvailable(appointmentStart)
-                                .duration(LocalTime.of(1, 0))
+                                .duration(LocalTime.of(0, APPOINTMENT_DURATION_MINUTES))
                                 .status(Status.ACT)
-                                .dayOfWeek(com.mechanical.workshops.enums.DayOfWeek.valueOf(date.getDayOfWeek().toString().substring(0, 3)))
+                                .dayOfWeek(getDayInSpanish(date.getDayOfWeek()))
+                                .code(generateAppointmentCode(date))
                                 .build());
                     }
-
                     appointmentStart = appointmentStart.plusMinutes(APPOINTMENT_DURATION_MINUTES);
-                    start = start.plusMinutes(APPOINTMENT_DURATION_MINUTES);
                 }
             }
         }
-
         saveAppointments(availableAppointments);
-        log.info("Appointments generated for the week from {} to {}", startDate, endDate);
+        log.info("Appointments generated from {} to {}", startDate, endDate);
     }
 
     @PostConstruct
@@ -80,5 +86,29 @@ public class AppointmentAvailableCronService {
 
     private void saveAppointments(List<AvailableAppointment> availableAppointments) {
         availableAppointmentRepository.saveAll(availableAppointments);
+    }
+
+    private void cleanOldAppointments(LocalDate today) {
+        int deletedCount = availableAppointmentRepository.deleteByDateAvailableBeforeAndStatus(today, Status.ACT);
+        log.info("Deleted {} old appointments.", deletedCount);
+    }
+
+    private String getDayInSpanish(DayOfWeek dayOfWeek) {
+        return switch (dayOfWeek) {
+            case MONDAY -> "Lunes";
+            case TUESDAY -> "Martes";
+            case WEDNESDAY -> "Miércoles";
+            case THURSDAY -> "Jueves";
+            case FRIDAY -> "Viernes";
+            case SATURDAY -> "Sábado";
+            default -> "Domingo";
+        };
+    }
+
+    private String generateAppointmentCode(LocalDate date) {
+        String dayNumber = String.format("%02d", date.getDayOfMonth());
+        String dayAbbreviation = getDayInSpanish(date.getDayOfWeek()).substring(0, 3);
+        int randomFourDigit = random.nextInt(9000) + 1000; // Número aleatorio de 4 dígitos
+        return dayNumber + dayAbbreviation + randomFourDigit;
     }
 }

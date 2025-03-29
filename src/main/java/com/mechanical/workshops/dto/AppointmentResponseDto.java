@@ -27,6 +27,8 @@ public class AppointmentResponseDto {
 
     private String statusAttendance;
 
+    private String code;
+
     private UserResponseDto technician;
 
     private ServiceResponseDto service;
