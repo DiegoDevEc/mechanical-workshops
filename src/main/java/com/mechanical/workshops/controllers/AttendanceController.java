@@ -45,7 +45,7 @@ public class AttendanceController {
         return attendanceService.updateStatus(attendanceId, status);
     }
 
-    @PutMapping("/cancel/{attendanceId}")
+    @DeleteMapping("/cancel/{attendanceId}")
     public ResponseEntity<ResponseDto> cancel(@PathVariable UUID attendanceId) {
         return attendanceService.cancel(attendanceId);
     }

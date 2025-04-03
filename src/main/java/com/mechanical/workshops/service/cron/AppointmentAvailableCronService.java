@@ -26,7 +26,7 @@ public class AppointmentAvailableCronService {
     private static final LocalTime MONDAY_FRIDAY_END = LocalTime.of(17, 0);
     private static final LocalTime SATURDAY_START = LocalTime.of(8, 0);
     private static final LocalTime SATURDAY_END = LocalTime.of(12, 0);
-    private static final int MAX_PARALLEL = 3;
+    private static final int MAX_PARALLEL = 1;
     private static final int APPOINTMENT_DURATION_MINUTES = 20;
 
     private final AvailableAppointmentRepository availableAppointmentRepository;
@@ -107,7 +107,7 @@ public class AppointmentAvailableCronService {
 
     private String generateAppointmentCode(LocalDate date) {
         String dayNumber = String.format("%02d", date.getDayOfMonth());
-        String dayAbbreviation = getDayInSpanish(date.getDayOfWeek()).substring(0, 3);
+        String dayAbbreviation = date.getDayOfWeek().toString().substring(0, 3);
         int randomFourDigit = random.nextInt(9000) + 1000; // Número aleatorio de 4 dígitos
         return dayNumber + dayAbbreviation + randomFourDigit;
     }

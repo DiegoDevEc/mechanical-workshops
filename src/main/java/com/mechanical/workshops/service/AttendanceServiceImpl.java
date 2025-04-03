@@ -52,7 +52,8 @@ public class AttendanceServiceImpl implements AttendanceService {
         Page<Attendance> attendances = attendanceRepository.findByClientAllAndStatus(status, Person.builder().id(clientId).build(), PageRequest.of(page, size));
 
         List<AttendanceResponseDto> attendanceResponseDtoList = attendances
-                .stream().map(attendance -> modelMapper.map(attendance, AttendanceResponseDto.class)).toList();
+                .stream()
+                .map(attendance -> modelMapper.map(attendance, AttendanceResponseDto.class)).toList();
 
         return ResponseEntity.ok(PageResponseDto.builder()
                 .content(attendanceResponseDtoList)
