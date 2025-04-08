@@ -17,6 +17,10 @@ public class AttendanceResponseDto {
 
     private UUID appointmentId;
 
+    private VehicleResponseDto vehicle;
+    
+    private UserResponseDto client;
+
     private ServiceResponseDto service;
 
     private LocalDate startDate;

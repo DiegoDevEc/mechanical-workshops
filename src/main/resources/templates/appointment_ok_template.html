@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Confirmación de Reserva</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .reserva-card {
+            max-width: 500px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: left;
+        }
+        .header {
+            color: #FF6B00; /* Naranja mecánico */
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .header img {
+            width: 30px;
+            margin-right: 10px;
+            filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(1deg) brightness(102%) contrast(106%); /* Naranja */
+        }
+        .success-message {
+            background-color: #FFF4E5;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: bold;
+            color: #FF6B00;
+        }
+        .detail {
+            margin: 12px 0;
+            display: flex;
+            align-items: center;
+        }
+        .detail-icon {
+            font-size: 20px;
+            margin-right: 10px;
+            width: 24px;
+            text-align: center;
+            color: #FF6B00;
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="reserva-card">
+    <div class="header">
+        <img src="https://cdn-icons-png.flaticon.com/512/3142/3142029.png" alt="Icono de taller">
+        Confirmación de Reserva
+    </div>
+
+    <div class="success-message">
+        ✅ ¡Hola, {{name}}! Tu reserva en el taller ha sido confirmada.
+    </div>
+
+    <div class="detail">
+        <span class="detail-icon">🔧</span>
+        <strong>Servicio:</strong> {{service}}
+    </div>
+
+    <div class="detail">
+        <span class="detail-icon">📅</span>
+        <strong>Fecha:</strong> {{date}}
+    </div>
+
+    <div class="detail">
+        <span class="detail-icon">⏰</span>
+        <strong>Hora:</strong> {{hour}}
+    </div>
+
+    <div class="footer">
+        <p>¡Gracias por elegirnos! Para cambios, llámanos al <strong>+593 991 000 000</strong>.</p>
+        <p>¡Listos para atenderte! 🚗💨</p>
+    </div>
+</div>
+</body>
+</html>

@@ -12,7 +12,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -35,4 +34,5 @@ public interface AttendanceRepository extends JpaRepository<Attendance, UUID> {
             Pageable pageable);
 
     Optional<Attendance> findByAppointment(Appointment appointment);
+    Optional<Attendance> findByCode(String code);
 }

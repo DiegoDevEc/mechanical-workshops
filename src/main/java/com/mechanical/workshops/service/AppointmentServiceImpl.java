@@ -1,5 +1,6 @@
 package com.mechanical.workshops.service;
 
+import com.mechanical.workshops.config.WhatsAppMessagesConfig;
 import com.mechanical.workshops.constants.Constants;
 import com.mechanical.workshops.dto.*;
 import com.mechanical.workshops.enums.Status;
@@ -8,6 +9,7 @@ import com.mechanical.workshops.enums.StatusAttendance;
 import com.mechanical.workshops.exception.NotFoundException;
 import com.mechanical.workshops.models.*;
 import com.mechanical.workshops.repository.*;
+import com.mechanical.workshops.utils.EmailUtil;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -33,9 +36,14 @@ public class AppointmentServiceImpl implements AppointmentService{
     private final PersonRepository personRepository;
     private final VehicleRepository vehicleRepository;
     private final ServiceRepository serviceRepository;
+    private final WhatsappService whatsappService;
+    private final WhatsAppMessagesConfig whatsAppMessages;
 
     @Override
     public ResponseEntity<ResponseDto> register(AppointmentRequestDto appointmentRequestDto) {
+
+        User user = userRepository.findByPerson(Person.builder().id(appointmentRequestDto.getClientId()).build())
+               .orElseThrow(() -> new NotFoundException("User not found"));
 
         AvailableAppointment availableAppointment = availableAppointmentRepository
                .findById(appointmentRequestDto.getAvailableAppointmentId()).orElseThrow(() -> new NotFoundException("Availability Appointment not found"));
@@ -71,6 +79,17 @@ public class AppointmentServiceImpl implements AppointmentService{
         availableAppointment.setStatus(Status.INA);
 
         availableAppointmentRepository.save(availableAppointment);
+
+        Map<String, String> parameters = Map
+                .of("name", client.getFirstname() + " " + client.getLastname(),
+                        "date", availableAppointment.getDateAvailable().toString(),
+                        "service", service.getName(),
+                        "hour", availableAppointment.getTimeAvailable().toString());
+
+        EmailUtil.sendEmail(user.getEmail(), "Reserva Exitosa", "appointment_ok_template", parameters);
+
+        String numberClient = user.getPhone().substring(1);
+        whatsappService.send(numberClient, whatsAppMessages.getReservaExitosa(), parameters);
 
        return ResponseEntity.ok(ResponseDto.builder()
                .status(HttpStatus.OK)

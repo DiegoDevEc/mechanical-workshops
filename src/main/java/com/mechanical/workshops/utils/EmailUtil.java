@@ -4,12 +4,14 @@ import com.resend.Resend;
 import com.resend.core.exception.ResendException;
 import com.resend.services.emails.model.CreateEmailOptions;
 import com.resend.services.emails.model.CreateEmailResponse;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Map;
 
+@Slf4j
 public class EmailUtil {
 
     private static final String API_KEY = "re_AvxmVqYh_PzgxACHcZ8m4FuEjZ19EuBGj"; // Reemplaza con tu API Key real
@@ -38,7 +40,7 @@ public class EmailUtil {
                     .build();
 
             CreateEmailResponse data = resend.emails().send(params);
-            System.out.println("Correo enviado con éxito. ID: " + data.getId());
+            log.info("Email enviado con ID: {}", data.getId());
         } catch (IOException | ResendException e) {
             e.printStackTrace();
         }

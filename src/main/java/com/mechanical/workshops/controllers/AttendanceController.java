@@ -2,8 +2,6 @@ package com.mechanical.workshops.controllers;
 
 import com.mechanical.workshops.dto.PageResponseDto;
 import com.mechanical.workshops.dto.ResponseDto;
-import com.mechanical.workshops.enums.Status;
-import com.mechanical.workshops.enums.StatusAppointment;
 import com.mechanical.workshops.enums.StatusAttendance;
 import com.mechanical.workshops.service.AttendanceService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -11,7 +9,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.UUID;
 
 @RestController
@@ -43,6 +40,11 @@ public class AttendanceController {
     @PutMapping("/update-status/{attendanceId}")
     public ResponseEntity<ResponseDto> updateStatus(@PathVariable UUID attendanceId, @RequestParam(required = false) StatusAttendance status) {
         return attendanceService.updateStatus(attendanceId, status);
+    }
+
+    @PutMapping("/update-ingress/{attendanceId}")
+    public ResponseEntity<ResponseDto> update(@PathVariable UUID attendanceId) {
+        return attendanceService.updateIngress(attendanceId);
     }
 
     @DeleteMapping("/cancel/{attendanceId}")

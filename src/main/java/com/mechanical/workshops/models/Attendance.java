@@ -5,7 +5,7 @@ import com.mechanical.workshops.enums.StatusAttendance;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -39,9 +39,9 @@ public class Attendance {
     private Person technician; // Técnico encargado
 
     @Column(nullable = false)
-    private LocalDate startDate;
+    private LocalDateTime startDate;
 
-    private LocalDate endDate;
+    private LocalDateTime endDate;
 
     private String comments;
 

@@ -37,3 +37,16 @@ logging:
         security: DEBUG
 
 
+whatsapp:
+  messages:
+    reserva-exitosa: |
+      ¡Hola *%s*! 😊  
+
+      ✅ *¡Tu reserva se ha realizado con éxito!*  
+
+      📅 *Fecha:* %s  
+      ⏰ *Hora:* %s  
+
+      ¡Gracias por confiar en nosotros! 🙌  
+
+      ¡Te esperamos! 🎉
