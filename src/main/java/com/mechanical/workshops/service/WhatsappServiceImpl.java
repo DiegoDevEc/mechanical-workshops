@@ -10,7 +10,7 @@ public class WhatsappServiceImpl implements WhatsappService {
     @Override
     public void send(String number, String message, Map<String, String> parameters) {
         String messageUser = generateMessage(message, parameters);
-        WhatsaapUtil.sendMsjWhatsapp(number, messageUser);
+       // WhatsaapUtil.sendMsjWhatsapp(number, messageUser);
     }
 
     private String generateMessage(String message, Map<String, String> parameters) {

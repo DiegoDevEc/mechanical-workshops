@@ -11,7 +11,7 @@ public class WhatsaapUtil {
     private static final String TWILIO_PREFIX = "whatsapp:+593";
     private static final String WHATSAPP_NUMBER = "whatsapp:+14155238886";
 
-    public static void sendMsjWhatsapp(String phoneSender, String messageUser) {
+   /* public static void sendMsjWhatsapp(String phoneSender, String messageUser) {
         String numberUser = TWILIO_PREFIX + phoneSender;
         Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
         Message message = Message.creator(
@@ -21,5 +21,5 @@ public class WhatsaapUtil {
                 .create();
 
         System.out.println(message.getSid());
-    }
+    }*/
 }

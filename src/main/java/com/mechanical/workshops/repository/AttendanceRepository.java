@@ -12,6 +12,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -30,6 +31,14 @@ public interface AttendanceRepository extends JpaRepository<Attendance, UUID> {
             "AND a.appointment.client = :person ")
     Page<Attendance> findByClientAllAndStatus(
             @Param("status") StatusAttendance status,
+            @Param("person") Person person,
+            Pageable pageable);
+
+    @Query("SELECT a FROM Attendance a " +
+            "WHERE (:statuses IS NULL OR a.status IN :statuses) " +
+            "AND a.technician = :person")
+    Page<Attendance> findByTechnicianAndStatuses(
+            @Param("statuses") List<StatusAttendance> statuses,
             @Param("person") Person person,
             Pageable pageable);
 

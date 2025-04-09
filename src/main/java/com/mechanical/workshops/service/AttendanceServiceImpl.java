@@ -61,6 +61,38 @@ public class AttendanceServiceImpl implements AttendanceService {
     }
 
     @Override
+    public ResponseEntity<PageResponseDto> getAllAttendanceByTechnicianAssigned(UUID technicianId, StatusAttendance status, int page, int size) {
+
+        List<StatusAttendance> statuses;
+
+        if(status == null) {
+            statuses = List.of(StatusAttendance.ASSIGN, StatusAttendance.PROGRESS);
+        }else {
+            statuses = List.of(status);
+        }
+
+        Page<Attendance> attendances = attendanceRepository.findByTechnicianAndStatuses(statuses, Person.builder().id(technicianId).build(), PageRequest.of(page, size));
+
+        List<AttendanceResponseDto> attendanceResponseDtoList = attendances
+                .stream().map(attendance -> {
+                    User user = userRepository.findByPerson(attendance.getAppointment().getClient()).orElse(null);
+                    AttendanceResponseDto attendanceResponseDto = modelMapper.map(attendance, AttendanceResponseDto.class);
+                    attendanceResponseDto.setClient(modelMapper.map(attendance.getAppointment().getClient(), UserResponseDto.class));
+                    attendanceResponseDto.getClient().setPhone(user.getPhone());
+                    attendanceResponseDto.setVehicle(modelMapper.map(attendance.getAppointment().getVehicle(), VehicleResponseDto.class));
+                    return attendanceResponseDto;
+                }).toList();
+
+        return ResponseEntity.ok(PageResponseDto.builder()
+                .content(attendanceResponseDtoList)
+                .pageNumber(attendances.getNumber())
+                .pageSize(attendances.getSize())
+                .totalElements(attendances.getTotalElements())
+                .totalPages(attendances.getTotalPages())
+                .build());
+    }
+
+    @Override
     public ResponseEntity<PageResponseDto> getAllAttendanceByClient(UUID clientId, StatusAttendance status, int page, int size) {
 
         Page<Attendance> attendances = attendanceRepository.findByClientAllAndStatus(status, Person.builder().id(clientId).build(), PageRequest.of(page, size));
@@ -102,9 +134,9 @@ public class AttendanceServiceImpl implements AttendanceService {
     }
 
     @Override
-    public ResponseEntity<ResponseDto> updateIngress(UUID attendanceId) {
+    public ResponseEntity<ResponseDto> updateIngress(String attendanceId) {
 
-      Attendance attendance =  attendanceRepository.findById(attendanceId)
+      Attendance attendance =  attendanceRepository.findByCode(attendanceId)
               .orElseThrow(() -> new NotFoundException(String.format(Constants.ENTITY_NOT_FOUND, Constants.ATTENDANCE, attendanceId)));
 
             attendance.setStatus(StatusAttendance.PROGRESS);
@@ -120,7 +152,7 @@ public class AttendanceServiceImpl implements AttendanceService {
                 }
                 appointmentRepository.save(appointment);
             });
-            sendEmail(attendance);
+            sendEmail(attendance, "Mantenimiento en proceso", "appointment_progress_template");
         return ResponseEntity.ok(ResponseDto.builder()
                 .status(HttpStatus.OK)
                 .message(String.format(Constants.ENTITY_UPDATED, Constants.ATTENDANCE, attendanceId))
@@ -128,8 +160,35 @@ public class AttendanceServiceImpl implements AttendanceService {
     }
 
     @Override
-    public ResponseEntity<ResponseDto> cancel(UUID attendanceId) {
-        attendanceRepository.findById(attendanceId).ifPresent(attendance -> {
+    public ResponseEntity<ResponseDto> updateFinalizeService(String attendanceId, AttendanceRequestDto attendanceRequestDto) {
+
+        Attendance attendance =  attendanceRepository.findByCode(attendanceId)
+                .orElseThrow(() -> new NotFoundException(String.format(Constants.ENTITY_NOT_FOUND, Constants.ATTENDANCE, attendanceId)));
+
+        attendance.setStatus(StatusAttendance.FINISH);
+        attendance.setEndDate(LocalDateTime.now());
+        attendance.setComments(attendanceRequestDto.getComments());
+        attendanceRepository.save(attendance);
+
+        appointmentRepository.findById(attendance.getAppointment().getId()).ifPresent(appointment -> {
+            appointment.setStatus(StatusAppointment.FINISH);
+            appointmentRepository.save(appointment);
+        });
+
+        sendEmail(attendance, "Mantenimiento finalizado", "appointment_finish_template");
+
+        return ResponseEntity.ok(ResponseDto.builder()
+                .status(HttpStatus.OK)
+                .message(String.format(Constants.ENTITY_UPDATED, Constants.ATTENDANCE, attendanceId))
+                .build());
+    }
+
+    @Override
+    public ResponseEntity<ResponseDto> cancel(String attendanceId) {
+
+        Attendance attendance =  attendanceRepository.findByCode(attendanceId)
+                .orElseThrow(() -> new NotFoundException(String.format(Constants.ENTITY_NOT_FOUND, Constants.ATTENDANCE, attendanceId)));
+
             attendance.setStatus(StatusAttendance.CANCELED);
             attendanceRepository.save(attendance);
 
@@ -138,15 +197,13 @@ public class AttendanceServiceImpl implements AttendanceService {
                 appointmentRepository.save(appointment);
             });
 
-        });
-
         return ResponseEntity.ok(ResponseDto.builder()
                 .status(HttpStatus.OK)
                 .message(String.format(Constants.ENTITY_UPDATED, Constants.ATTENDANCE, attendanceId))
                 .build());
     }
 
-    private void sendEmail(Attendance attendance) {
+    private void sendEmail(Attendance attendance, String subject ,String template) {
         User user = userRepository.findByPerson(attendance.getAppointment().getClient()).orElse(null);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
         String formattedDate = attendance.getStartDate().format(formatter);
@@ -158,6 +215,6 @@ public class AttendanceServiceImpl implements AttendanceService {
                 "technician", attendance.getTechnician().getFirstname() + " " + attendance.getTechnician().getLastname()
         );
 
-        EmailUtil.sendEmail(user.getEmail(), "Mantenimiento en proceso", "appointment_progress_template", parameters);
+        EmailUtil.sendEmail(user.getEmail(), subject, template, parameters);
     }
 }
