@@ -11,8 +11,8 @@ public class JacksonConfig {
     @Bean
     public ObjectMapper objectMapper() {
         ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());  // Registra el módulo JavaTime
-        objectMapper.findAndRegisterModules();  // Registra otros módulos de Jackson si es necesario
+        objectMapper.registerModule(new JavaTimeModule()); 
+        objectMapper.findAndRegisterModules(); 
         return objectMapper;
     }
 }
