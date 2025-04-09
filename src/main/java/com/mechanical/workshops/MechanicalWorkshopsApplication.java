@@ -7,7 +7,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableJpaAuditing
-@EnableScheduling  // Habilita tareas programadas
+@EnableScheduling  // Habilitar las tareas programadas 
 public class MechanicalWorkshopsApplication {
 
 	public static void main(String[] args) {
