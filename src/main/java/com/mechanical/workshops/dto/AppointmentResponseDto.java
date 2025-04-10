@@ -1,6 +1,5 @@
 package com.mechanical.workshops.dto;
 
-import com.mechanical.workshops.models.AvailableAppointment;
 import lombok.*;
 
 import java.time.LocalDate;

@@ -1,5 +1,8 @@
 package com.mechanical.workshops.constants;
 
+import java.time.Month;
+import java.util.Map;
+
 public class Constants {
 
     private Constants() {
@@ -42,4 +45,19 @@ public class Constants {
     public static final String IDENTIFICATION = "Identificación";
 
     public static final String ERROR_TOKEN = "El token no es válido";
+
+    private static final Map<String, Month> SPANISH_MONTHS = Map.ofEntries(
+            Map.entry("enero", Month.JANUARY),
+            Map.entry("febrero", Month.FEBRUARY),
+            Map.entry("marzo", Month.MARCH),
+            Map.entry("abril", Month.APRIL),
+            Map.entry("mayo", Month.MAY),
+            Map.entry("junio", Month.JUNE),
+            Map.entry("julio", Month.JULY),
+            Map.entry("agosto", Month.AUGUST),
+            Map.entry("septiembre", Month.SEPTEMBER),
+            Map.entry("octubre", Month.OCTOBER),
+            Map.entry("noviembre", Month.NOVEMBER),
+            Map.entry("diciembre", Month.DECEMBER)
+    );
 }
