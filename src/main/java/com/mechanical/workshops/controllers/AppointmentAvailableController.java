@@ -1,6 +1,5 @@
 package com.mechanical.workshops.controllers;
 
-import com.mechanical.workshops.dto.AvailableAppointmentDaysDto;
 import com.mechanical.workshops.dto.PageResponseDto;
 import com.mechanical.workshops.dto.ResponseDto;
 import com.mechanical.workshops.service.AppointmentAvailableService;

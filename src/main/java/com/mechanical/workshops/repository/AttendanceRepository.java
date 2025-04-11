@@ -51,6 +51,16 @@ public interface AttendanceRepository extends JpaRepository<Attendance, UUID> {
             @Param("endDate") LocalDateTime endDate);
 
     @Query("SELECT a FROM Attendance a " +
+            "JOIN a.appointment ap " +
+            "WHERE (:clientId IS NULL OR ap.client.id = :clientId) " +
+            "AND a.startDate >= :startDate " +
+            "AND (COALESCE(:endDate, a.startDate) IS NULL OR a.startDate <= COALESCE(:endDate, a.startDate))")
+    List<Attendance> findAttendancesInRangeYear(
+            @Param("clientId") UUID clientId,
+            @Param("startDate") LocalDateTime startDate,
+            @Param("endDate") LocalDateTime endDate);
+
+    @Query("SELECT a FROM Attendance a " +
             "WHERE (:status IS NULL OR a.status = :status) " +
             "AND a.technician = :person ")
     Page<Attendance> findByTechnicalAllAndStatus(

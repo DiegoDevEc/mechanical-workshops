@@ -1,9 +1,5 @@
 package com.mechanical.workshops.utils;
 
-import com.twilio.Twilio;
-import com.twilio.rest.api.v2010.account.Message;
-import com.twilio.type.PhoneNumber;
-
 public class WhatsaapUtil {
 
     private static final String ACCOUNT_SID = "AC82a201ca2cac8d4ab1c55ac651a819d9";

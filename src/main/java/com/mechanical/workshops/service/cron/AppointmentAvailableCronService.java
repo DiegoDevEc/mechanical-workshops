@@ -13,9 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -38,26 +36,26 @@ public class AppointmentAvailableCronService {
         LocalDate startDate = today.plusDays(1);
         LocalDate endDate = startDate.plusDays(6);
 
-        // Eliminar turnos antiguos
         cleanOldAppointments(today);
-
         List<AvailableAppointment> availableAppointments = new ArrayList<>();
+
+        // Almacenar códigos generados para evitar duplicados
+        Set<String> generatedCodes = new HashSet<>();
 
         for (LocalDate date = startDate; !date.isAfter(endDate); date = date.plusDays(1)) {
             boolean isSaturday = date.getDayOfWeek() == DayOfWeek.SATURDAY;
             boolean isSunday = date.getDayOfWeek() == DayOfWeek.SUNDAY;
 
-            if (!isSunday) { // No hay turnos los domingos
-
+            if (!isSunday) {
                 if (availableAppointmentRepository.existsByDateAvailable(date)) {
                     log.info("Appointments already exist for date {}", date);
-                    continue; // Omitir la generación de turnos para esta fecha
+                    continue;
                 }
 
                 LocalTime start = isSaturday ? SATURDAY_START : MONDAY_FRIDAY_START;
                 LocalTime end = isSaturday ? SATURDAY_END : MONDAY_FRIDAY_END;
-
                 LocalTime appointmentStart = start;
+
                 while (appointmentStart.isBefore(end)) {
                     for (int i = 0; i < MAX_PARALLEL; i++) {
                         availableAppointments.add(AvailableAppointment.builder()
@@ -66,7 +64,7 @@ public class AppointmentAvailableCronService {
                                 .duration(LocalTime.of(0, APPOINTMENT_DURATION_MINUTES))
                                 .status(Status.ACT)
                                 .dayOfWeek(getDayInSpanish(date.getDayOfWeek()))
-                                .code(generateAppointmentCode(date))
+                                .code(generateUniqueAppointmentCode(date, generatedCodes))
                                 .build());
                     }
                     appointmentStart = appointmentStart.plusMinutes(APPOINTMENT_DURATION_MINUTES);
@@ -75,6 +73,18 @@ public class AppointmentAvailableCronService {
         }
         saveAppointments(availableAppointments);
         log.info("Appointments generated from {} to {}", startDate, endDate);
+    }
+
+    private String generateUniqueAppointmentCode(LocalDate date, Set<String> existingCodes) {
+        String code;
+        do {
+            String dayNumber = String.format("%02d", date.getDayOfMonth());
+            String dayAbbreviation = date.getDayOfWeek().toString().substring(0, 2);
+            int randomFourDigit = random.nextInt(9000) + 1000;
+            code = dayNumber + dayAbbreviation + randomFourDigit;
+        } while (existingCodes.contains(code));
+        existingCodes.add(code);
+        return code;
     }
 
     @PostConstruct

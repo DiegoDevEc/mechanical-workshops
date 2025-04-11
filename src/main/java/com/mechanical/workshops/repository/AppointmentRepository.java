@@ -1,9 +1,7 @@
 package com.mechanical.workshops.repository;
 
-import com.mechanical.workshops.enums.Status;
 import com.mechanical.workshops.enums.StatusAppointment;
 import com.mechanical.workshops.models.Appointment;
-import com.mechanical.workshops.models.AvailableAppointment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,11 +1,11 @@
 package com.mechanical.workshops.dto;
 
 import com.mechanical.workshops.enums.Role;
-import lombok.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+import lombok.*;
 
 @Getter
 @Setter

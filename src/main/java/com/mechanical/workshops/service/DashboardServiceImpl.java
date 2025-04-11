@@ -1,8 +1,8 @@
 package com.mechanical.workshops.service;
 
-import com.mechanical.workshops.constants.Constants;
-import com.mechanical.workshops.dto.*;
-import com.mechanical.workshops.enums.Status;
+import com.mechanical.workshops.dto.AttendanceDashboardFilter;
+import com.mechanical.workshops.dto.AttendanceDashboardResponse;
+import com.mechanical.workshops.dto.ResponseDto;
 import com.mechanical.workshops.enums.StatusAttendance;
 import com.mechanical.workshops.models.Attendance;
 import com.mechanical.workshops.repository.AttendanceRepository;
@@ -11,10 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-
 import java.math.BigDecimal;
-import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.format.TextStyle;
@@ -49,10 +46,10 @@ public class DashboardServiceImpl implements  DashboardService {
 
         AttendanceDashboardResponse createResponse = createResponse(attendances);
 
-        Map<String, BigDecimal> finishedServices = monthlyFinishedServicesTotal(filter);
+        Map<String, BigDecimal> finishedServices = monthlyFinishedServicesTotal(filter, true);
         createResponse.setDataValueMount(finishedServices);
 
-        Map<String, BigDecimal> finishedServicesByMonth = monthlyFinishedServices(filter);
+        Map<String, BigDecimal> finishedServicesByMonth = monthlyFinishedServices(filter, true);
         createResponse.setFinishValueMount(finishedServicesByMonth);
 
         return ResponseEntity.ok(ResponseDto.builder()
@@ -69,10 +66,10 @@ public class DashboardServiceImpl implements  DashboardService {
     );
         AttendanceDashboardResponse createResponse = createResponse(attendances);
 
-        Map<String, BigDecimal> finishedServices = monthlyFinishedServicesTotal(filter);
+        Map<String, BigDecimal> finishedServices = monthlyFinishedServicesTotal(filter, false);
         createResponse.setDataValueMount(finishedServices);
 
-        Map<String, BigDecimal> finishedServicesByMonth = monthlyFinishedServices(filter);
+        Map<String, BigDecimal> finishedServicesByMonth = monthlyFinishedServices(filter, false);
         createResponse.setFinishValueMount(finishedServicesByMonth);
 
         return ResponseEntity.ok(ResponseDto.builder()
@@ -97,24 +94,15 @@ public class DashboardServiceImpl implements  DashboardService {
                         Collectors.counting()
                 ));
 
-       /* Map<String, BigDecimal> valueMount = attendances.stream()
-                .filter(attendance -> attendance.getStatus() == StatusAttendance.FINISH)  // Filtra por estado "finish"
-                .collect(Collectors.groupingBy(
-                        attendance -> attendance.getStartDate().getMonth().getDisplayName(TextStyle.FULL, Locale.getDefault()),  // Agrupa por mes
-                        Collectors.reducing(BigDecimal.ZERO, attendance -> attendance.getService().getCost(), BigDecimal::add)  // Suma el costo de cada servicio usando BigDecimal
-                ));*/
-
-
-
 
         return AttendanceDashboardResponse.builder()
                 .dataStatus(statusCount)
                 .build();
     }
 
-    private Map<String, BigDecimal> monthlyFinishedServicesTotal(AttendanceDashboardFilter filter){
+    private Map<String, BigDecimal> monthlyFinishedServicesTotal(AttendanceDashboardFilter filter, boolean isTechnician) {
 
-        List<Attendance> finishedServices = getListByYear(filter);
+        List<Attendance> finishedServices = getListByYear(filter, isTechnician);
 
         return finishedServices.stream()
                 .filter(attendance -> StatusAttendance.FINISH.equals(attendance.getStatus()))
@@ -137,9 +125,9 @@ public class DashboardServiceImpl implements  DashboardService {
 
     }
 
-    private Map<String, BigDecimal> monthlyFinishedServices(AttendanceDashboardFilter filter){
+    private Map<String, BigDecimal> monthlyFinishedServices(AttendanceDashboardFilter filter, boolean isTechnician) {
 
-        List<Attendance> finishedServices = getListByYear(filter);
+        List<Attendance> finishedServices = getListByYear(filter, isTechnician);
 
         return finishedServices.stream()
                 .filter(attendance -> StatusAttendance.FINISH.equals(attendance.getStatus()))
@@ -165,7 +153,7 @@ public class DashboardServiceImpl implements  DashboardService {
 
     }
 
-    private List<Attendance> getListByYear(AttendanceDashboardFilter filter){
+    private List<Attendance> getListByYear(AttendanceDashboardFilter filter, boolean isTechnician) {
         LocalDateTime startDate;
         LocalDateTime endDate;
 
@@ -179,6 +167,10 @@ public class DashboardServiceImpl implements  DashboardService {
             endDate = LocalDateTime.of(filterYear, Month.DECEMBER, 31, 23, 59);
         }
 
-        return attendanceRepository.findAttendancesInRangeAndTechnicianYear(filter.getEntityId(), startDate, endDate);
+        if (isTechnician) {
+            return attendanceRepository.findAttendancesInRangeAndTechnicianYear(filter.getEntityId(), startDate, endDate);
+        }
+
+        return attendanceRepository.findAttendancesInRangeYear(filter.getEntityId(), startDate, endDate);
     }
 }

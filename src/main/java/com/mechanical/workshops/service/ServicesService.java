@@ -1,6 +1,9 @@
 package com.mechanical.workshops.service;
 
-import com.mechanical.workshops.dto.*;
+import com.mechanical.workshops.dto.PageResponseDto;
+import com.mechanical.workshops.dto.ResponseDto;
+import com.mechanical.workshops.dto.ServiceSaveRequestDto;
+import com.mechanical.workshops.dto.ServiceUpdateRequestDto;
 import org.springframework.http.ResponseEntity;
 
 import java.util.UUID;

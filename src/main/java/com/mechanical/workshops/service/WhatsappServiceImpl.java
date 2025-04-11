@@ -1,6 +1,5 @@
 package com.mechanical.workshops.service;
 
-import com.mechanical.workshops.utils.WhatsaapUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;

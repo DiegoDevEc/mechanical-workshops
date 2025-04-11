@@ -11,7 +11,6 @@ import com.mechanical.workshops.models.User;
 import com.mechanical.workshops.repository.AppointmentRepository;
 import com.mechanical.workshops.repository.AttendanceRepository;
 import com.mechanical.workshops.repository.UserRepository;
-import com.mechanical.workshops.utils.DateUtil;
 import com.mechanical.workshops.utils.EmailUtil;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -21,7 +20,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;

@@ -2,9 +2,12 @@ package com.mechanical.workshops.auditable;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mechanical.workshops.repository.AuditLogRepository;
-import jakarta.persistence.*;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreRemove;
+import jakarta.persistence.PreUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 import java.time.Instant;
 import java.util.UUID;
 
